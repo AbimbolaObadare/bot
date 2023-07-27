@@ -304,6 +304,7 @@ def interact_with_user(
                         comment_done = _comment(
                             device,
                             my_username,
+                            username,
                             comment_percentage,
                             args,
                             session_state,
@@ -589,6 +590,7 @@ def _browse_carousel(device: DeviceFacade, obj_count: int) -> None:
 def _comment(
     device: DeviceFacade,
     my_username: str,
+    username : str,
     comment_percentage: int,
     args,
     session_state: SessionState,
@@ -633,10 +635,10 @@ def _comment(
                         device.back()
                         return False
                     logger.info(
-                        f"Write comment: {comment}", extra={"color": f"{Fore.CYAN}"}
+                        f"Write comment: @{username} {comment}", extra={"color": f"{Fore.CYAN}"}
                     )
                     comment_box.set_text(
-                        comment, Mode.PASTE if args.dont_type else Mode.TYPE
+                        f'@{username} '+ comment, Mode.PASTE if args.dont_type else Mode.TYPE
                     )
 
                     post_button = device.find(
