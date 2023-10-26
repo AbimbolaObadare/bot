@@ -1,4 +1,10 @@
 # Changelog
+## 3.2.7 (2023-09-30)
+### Fix
+- using the monkey approach until this bug is fixed https://github.com/openatx/atx-agent/pull/111
+## 3.2.6 (2023-09-28)
+### Fix
+- get rid of Activity class when starting app
 ## 3.2.5 (2023-07-23)
 ### Fix
 - account selection with the little arrow instead of clicking on the account name
