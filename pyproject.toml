@@ -19,7 +19,7 @@ dependencies = [
     "ConfigArgParse==1.5.3",
     "PyYAML==6.0",
     "uiautomator2==2.16.14",
-    "urllib3==1.26.7",
+    "urllib3==1.26.18",
     "emoji==1.6.1",
     "langdetect==1.0.9",
     "atomicwrites==1.4.0",
@@ -29,13 +29,8 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-telegram-reports = [
-    "pandas==1.2.4",
-    "pytest-cov",
-]
 analytics = ["matplotlib==3.4.2"]
-dev = ["flit", "pre-commit", "black", "flake8", "isort"]
-
+dev = ["flit", "pre-commit", "black", "flake8", "isort", "ruff"]
 
 [project.urls]
 Documentation = "https://docs.gramaddict.org/#/"

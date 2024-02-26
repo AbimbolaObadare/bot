@@ -1045,6 +1045,13 @@ class AccountView:
             logger.error("Not able to set your app in English! Do it by yourself!")
             exit(0)
 
+    def navigate_to_main_account(self):
+        logger.debug("Navigating to main account...")
+        profile_view = ProfileView(self.device)
+        profile_view.click_on_avatar()
+        if profile_view.getFollowingCount() is None:
+            profile_view.click_on_avatar()
+
     def changeToUsername(self, username: str):
         action_bar = ProfileView._getActionBarTitleBtn(self)
         if action_bar is not None:
@@ -1376,7 +1383,7 @@ class OpenedPostView:
             resourceId=ResourceID.BUTTON,
             classNameMatches=ClassName.BUTTON_OR_TEXTVIEW_REGEX,
         )
-        if type(text) != str:
+        if not isinstance(text, str):
             text = text.get_text() if text.exists() else ""
         return text in ["Following", "Requested"]
 
@@ -1449,7 +1456,8 @@ class ProfileView(ActionBarView):
         )
         return None
 
-    def _getSomeText(self):
+    def _getSomeText(self) -> Tuple[Optional[str], Optional[str], Optional[str]]:
+        """Get some text from the profile to check the language"""
         obj = self.device.find(
             resourceIdMatches=ResourceID.ROW_PROFILE_HEADER_TEXTVIEW_POST_CONTAINER
         )
@@ -1477,7 +1485,7 @@ class ProfileView(ActionBarView):
                 .child(index=1)
                 .get_text()
             )
-            return post, followers, following
+            return post.casefold(), followers.casefold(), following.casefold()
         except Exception as e:
             logger.debug(f"Exception: {e}")
             logger.warning(
