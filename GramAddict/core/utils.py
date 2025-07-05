@@ -275,7 +275,7 @@ def open_instagram(device):
         device.deviceV2.app_stop_all(excludes=[app_id])
         random_sleep()
     logger.debug("Setting FastInputIME as default keyboard.")
-    device.deviceV2.set_fastinput_ime(True)
+    device.deviceV2.set_input_ime(True)
     cmd: str = (
         f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell settings get secure default_input_method"
     )

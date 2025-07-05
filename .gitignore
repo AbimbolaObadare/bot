@@ -1,4 +1,5 @@
 /venv*
+*.sh
 /.venv
 /build
 /dump
