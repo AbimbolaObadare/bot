@@ -21,9 +21,7 @@ COLOR_NAME_TO_CODE = {
 }
 
 
-def print_text(
-    text, color="default", in_place=False, **kwargs
-):  # type: (str, str, bool, any) -> None
+def print_text(text, color="default", in_place=False, **kwargs):  # type: (str, str, bool, any) -> None
     """
     print text to console, a wrapper to built-in print
 
@@ -50,9 +48,7 @@ def create_url(url):
     """
     From the given url, produce a URL that is compatible with Github's REST API. Can handle blob or tree paths.
     """
-    repo_only_url = re.compile(
-        r"https:\/\/github\.com\/[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}\/[a-zA-Z0-9]+$"
-    )
+    repo_only_url = re.compile(r"https:\/\/github\.com\/[a-z\d](?:[a-z\d]|-(?=[a-z\d])){0,38}\/[a-zA-Z0-9]+$")
     re_branch = re.compile("/(tree|blob)/(.+?)/")
 
     # Check if the given url is a url to a GitHub repo. If it is, tell the
@@ -69,24 +65,14 @@ def create_url(url):
     # extract the branch name from the given url (e.g master)
     if branch:
         download_dirs = url[branch.end() :]
-        api_url = (
-            url[: branch.start()].replace("github.com", "api.github.com/repos", 1)
-            + "/contents/"
-            + download_dirs
-            + "?ref="
-            + branch.group(2)
-        )
+        api_url = url[: branch.start()].replace("github.com", "api.github.com/repos", 1) + "/contents/" + download_dirs + "?ref=" + branch.group(2)
         return api_url, download_dirs.split("/")[-1]
     else:
-        print_text(
-            "✘ Couldn't find the repo, Pls check the URL!!!", "red", in_place=True
-        )
+        print_text("✘ Couldn't find the repo, Pls check the URL!!!", "red", in_place=True)
         sys.exit()
 
 
-def download_from_github(
-    repo_url, proxies=None, output_dir="./", flatten=True, exts=None, file_count=0
-):
+def download_from_github(repo_url, proxies=None, output_dir="./", flatten=True, exts=None, file_count=0):
     """Downloads the files and directories in repo_url. If flatten is specified, the contents of any and all
     sub-directories will be pulled upwards into the root folder."""
 
@@ -157,22 +143,15 @@ def download_from_github(
                 ]
                 urllib.request.install_opener(opener)
                 if exts is None:
-                    urllib.request.urlretrieve(
-                        data["download_url"], Path(dir_out) / data["name"]
-                    )
+                    urllib.request.urlretrieve(data["download_url"], Path(dir_out) / data["name"])
                     file_count += 1
                     print_text(
                         "Downloaded: " + Fore.WHITE + "{}".format(data["name"]),
                         "green",
                         in_place=True,
                     )
-                if (
-                    exts is not None
-                    and os.path.splitext(data["download_url"])[1] in exts
-                ):
-                    urllib.request.urlretrieve(
-                        data["download_url"], Path(dir_out) / data["name"]
-                    )
+                if exts is not None and os.path.splitext(data["download_url"])[1] in exts:
+                    urllib.request.urlretrieve(data["download_url"], Path(dir_out) / data["name"])
                     file_count += 1
                     print_text(
                         "Downloaded: " + Fore.WHITE + "{}".format(data["name"]),

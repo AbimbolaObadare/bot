@@ -26,17 +26,11 @@ def create_device(device_id, app_id):
 
 
 def get_device_info(device):
-    logger.debug(
-        f"Phone Name: {device.get_info()['productName']}, SDK Version: {device.get_info()['sdkInt']}"
-    )
+    logger.debug(f"Phone Name: {device.get_info()['productName']}, SDK Version: {device.get_info()['sdkInt']}")
     if int(device.get_info()["sdkInt"]) < 19:
         logger.warning("Only Android 4.4+ (SDK 19+) devices are supported!")
-    logger.debug(
-        f"Screen dimension: {device.get_info()['displayWidth']}x{device.get_info()['displayHeight']}"
-    )
-    logger.debug(
-        f"Screen resolution: {device.get_info()['displaySizeDpX']}x{device.get_info()['displaySizeDpY']}"
-    )
+    logger.debug(f"Screen dimension: {device.get_info()['displayWidth']}x{device.get_info()['displayHeight']}")
+    logger.debug(f"Screen resolution: {device.get_info()['displaySizeDpX']}x{device.get_info()['displaySizeDpY']}")
     logger.debug(f"Device ID: {device.deviceV2.serial}")
 
 
@@ -86,9 +80,7 @@ class DeviceFacade:
         self.app_id = app_id
         try:
             if device_id is None or "." not in device_id:
-                self.deviceV2 = uiautomator2.connect(
-                    "" if device_id is None else device_id
-                )
+                self.deviceV2 = uiautomator2.connect("" if device_id is None else device_id)
             else:
                 self.deviceV2 = uiautomator2.connect(f"{device_id}")
         except ImportError:
@@ -212,9 +204,7 @@ class DeviceFacade:
             flag = search("mDreamingLockscreen=(true|false)", data.stdout)
             return flag is not None and flag.group(1) == "true"
         else:
-            logger.debug(
-                f"'adb -s {self.deviceV2.serial} shell dumpsys window' returns nothing!"
-            )
+            logger.debug(f"'adb -s {self.deviceV2.serial} shell dumpsys window' returns nothing!")
             return None
 
     def _is_keyboard_show(self):
@@ -229,9 +219,7 @@ class DeviceFacade:
             flag = search("mInputShown=(true|false)", data.stdout)
             return flag.group(1) == "true"
         else:
-            logger.debug(
-                f"'adb -s {self.deviceV2.serial} shell dumpsys input_method' returns nothing!"
-            )
+            logger.debug(f"'adb -s {self.deviceV2.serial} shell dumpsys input_method' returns nothing!")
             return None
 
     def is_alive(self):
@@ -341,10 +329,7 @@ class DeviceFacade:
         def __iter__(self):
             children = []
             try:
-                children.extend(
-                    DeviceFacade.View(view=item, device=self.deviceV2)
-                    for item in self.viewV2
-                )
+                children.extend(DeviceFacade.View(view=item, device=self.deviceV2) for item in self.viewV2)
                 return iter(children)
             except uiautomator2.RPCError as e:
                 raise DeviceFacade.RPCError(e)
@@ -462,18 +447,10 @@ class DeviceFacade:
 
             try:
                 visible_bounds = self.get_bounds()
-                x_abs = int(
-                    visible_bounds["left"]
-                    + (visible_bounds["right"] - visible_bounds["left"]) * x_offset
-                )
-                y_abs = int(
-                    visible_bounds["top"]
-                    + (visible_bounds["bottom"] - visible_bounds["top"]) * y_offset
-                )
+                x_abs = int(visible_bounds["left"] + (visible_bounds["right"] - visible_bounds["left"]) * x_offset)
+                y_abs = int(visible_bounds["top"] + (visible_bounds["bottom"] - visible_bounds["top"]) * y_offset)
 
-                logger.debug(
-                    f"Single click in ({x_abs},{y_abs}). Surface: ({visible_bounds['left']}-{visible_bounds['right']},{visible_bounds['top']}-{visible_bounds['bottom']})"
-                )
+                logger.debug(f"Single click in ({x_abs},{y_abs}). Surface: ({visible_bounds['left']}-{visible_bounds['right']},{visible_bounds['top']}-{visible_bounds['bottom']})")
                 self.viewV2.click(
                     self.get_ui_timeout(Timeout.LONG),
                     offset=(x_offset, y_offset),
@@ -512,9 +489,7 @@ class DeviceFacade:
             """
             visible_bounds = self.get_bounds()
             horizontal_len = visible_bounds["right"] - visible_bounds["left"]
-            vertical_len = visible_bounds["bottom"] - max(
-                visible_bounds["top"], obj_over
-            )
+            vertical_len = visible_bounds["bottom"] - max(visible_bounds["top"], obj_over)
             horizontal_padding = int(padding * horizontal_len)
             vertical_padding = int(padding * vertical_len)
             random_x = int(
@@ -533,12 +508,8 @@ class DeviceFacade:
             time_between_clicks = uniform(0.050, 0.140)
 
             try:
-                logger.debug(
-                    f"Double click in ({random_x},{random_y}) with t={int(time_between_clicks*1000)}ms. Surface: ({visible_bounds['left']}-{visible_bounds['right']},{visible_bounds['top']}-{visible_bounds['bottom']})."
-                )
-                self.deviceV2.double_click(
-                    random_x, random_y, duration=time_between_clicks
-                )
+                logger.debug(f"Double click in ({random_x},{random_y}) with t={int(time_between_clicks*1000)}ms. Surface: ({visible_bounds['left']}-{visible_bounds['right']},{visible_bounds['top']}-{visible_bounds['bottom']}).")
+                self.deviceV2.double_click(random_x, random_y, duration=time_between_clicks)
                 DeviceFacade.sleep_mode(SleepTime.DEFAULT)
             except uiautomator2.RPCError as e:
                 raise DeviceFacade.RPCError(e)
@@ -570,14 +541,8 @@ class DeviceFacade:
                 if self.viewV2 is None:
                     return False
                 exists: bool = self.viewV2.exists(self.get_ui_timeout(ui_timeout))
-                if (
-                    hasattr(self.viewV2, "count")
-                    and not exists
-                    and self.viewV2.count >= 1
-                ):
-                    logger.debug(
-                        f"UIA2 BUG: exists return False, but there is/are {self.viewV2.count} element(s)!"
-                    )
+                if hasattr(self.viewV2, "count") and not exists and self.viewV2.count >= 1:
+                    logger.debug(f"UIA2 BUG: exists return False, but there is/are {self.viewV2.count} element(s)!")
                     if ignore_bug:
                         return "BUG!"
                     # More info about that: https://github.com/openatx/uiautomator2/issues/689"
@@ -659,11 +624,7 @@ class DeviceFacade:
 
         def get_text(self, error=True, index=None):
             try:
-                text = (
-                    self.viewV2.info["text"]
-                    if index is None
-                    else self.viewV2[index].info["text"]
-                )
+                text = self.viewV2.info["text"] if index is None else self.viewV2[index].info["text"]
                 if text is not None:
                     return text
             except uiautomator2.RPCError as e:
@@ -678,9 +639,7 @@ class DeviceFacade:
             try:
                 if self.viewV2.exists():
                     return self.viewV2.info["selected"]
-                logger.debug(
-                    "Object has disappeared! Probably too short video which has been liked!"
-                )
+                logger.debug("Object has disappeared! Probably too short video which has been liked!")
                 return True
             except uiautomator2.RPCError as e:
                 raise DeviceFacade.RPCError(e)
@@ -724,14 +683,10 @@ class DeviceFacade:
 
                     typed_text = self.viewV2.get_text()
                     if typed_text != text:
-                        logger.warning(
-                            "Failed to write in text field, let's try in the old way.."
-                        )
+                        logger.warning("Failed to write in text field, let's try in the old way..")
                         self.viewV2.set_text(text)
                     else:
-                        logger.debug(
-                            f"Text typed in: {(datetime.now()-start).total_seconds():.2f}s"
-                        )
+                        logger.debug(f"Text typed in: {(datetime.now()-start).total_seconds():.2f}s")
                 DeviceFacade.sleep_mode(SleepTime.SHORT)
             except uiautomator2.RPCError as e:
                 raise DeviceFacade.RPCError(e)

@@ -12,13 +12,9 @@ def cmd_init(args):
         for username in args.account_name:
             if not path.exists("./run.py"):
                 print("Creating run.py ...")
-                download_from_github(
-                    "https://github.com/GramAddict/bot/blob/master/run.py"
-                )
+                download_from_github("https://github.com/GramAddict/bot/blob/master/run.py")
             if not path.exists(f"./accounts/{username}"):
-                print(
-                    f"Creating 'accounts/{username}' folder with a config starting point inside. You have to edit these files according with https://docs.gramaddict.org/#/configuration"
-                )
+                print(f"Creating 'accounts/{username}' folder with a config starting point inside. You have to edit these files according with https://docs.gramaddict.org/#/configuration")
                 download_from_github(
                     "https://github.com/GramAddict/bot/tree/master/config-examples",
                     output_dir=f"accounts/{username}",
@@ -70,11 +66,7 @@ def cmd_dump(args):
     dump_hierarchy(d, "dump/cur/hierarchy.xml")
     archive_name = int(time.time())
     make_archive(archive_name)
-    print(
-        Fore.GREEN
-        + Style.BRIGHT
-        + "\nCurrent screen dump generated successfully! Please, send me this file:"
-    )
+    print(Fore.GREEN + Style.BRIGHT + "\nCurrent screen dump generated successfully! Please, send me this file:")
     print(Fore.BLUE + Style.BRIGHT + f"{os.getcwd()}\\screen_{archive_name}.zip")
 
 
@@ -125,9 +117,7 @@ def main() -> None:
         prog="GramAddict",
         description="free human-like Instagram bot",
     )
-    parser.add_argument(
-        "-v", "--version", action="version", version=f"{parser.prog} {__version__}"
-    )
+    parser.add_argument("-v", "--version", action="version", version=f"{parser.prog} {__version__}")
     subparser = parser.add_subparsers(dest="subparser")
     actions = {}
     for c in _commands:

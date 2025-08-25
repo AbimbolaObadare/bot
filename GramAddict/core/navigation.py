@@ -21,9 +21,7 @@ def check_if_english(device):
     logger.debug("Checking if app is in English..")
     post, follower, following = ProfileView(device)._getSomeText()
     if None in {post, follower, following}:
-        logger.warning(
-            "Failed to check your Instagram language. Be sure to set it to English or the bot won't work!"
-        )
+        logger.warning("Failed to check your Instagram language. Be sure to set it to English or the bot won't work!")
     elif post == "posts" and follower == "followers" and following == "following":
         logger.debug("Instagram in English.")
     else:
@@ -88,9 +86,7 @@ def nav_to_hashtag_or_place(device, target, current_job):
         FistImageInView.click()
         return True
     else:
-        logger.info(
-            f"There is any result for {target} (not exists or doesn't load). Skip."
-        )
+        logger.info(f"There is any result for {target} (not exists or doesn't load). Skip.")
         return False
 
 

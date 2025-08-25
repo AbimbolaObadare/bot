@@ -71,7 +71,7 @@ def run_safely(device, device_id, sessions, session_state, screen_record, config
                 )
 
             except (
-                DeviceFacade.JsonRpcError,
+                DeviceFacade.RPCError,
                 IndexError,
                 HTTPException,
                 timeout,
@@ -87,12 +87,8 @@ def run_safely(device, device_id, sessions, session_state, screen_record, config
             except Exception as e:
                 logger.error(traceback.format_exc())
                 for exception_line in traceback.format_exception_only(type(e), e):
-                    logger.critical(
-                        f"'{exception_line}' -> This kind of exception will stop the bot (no restart)."
-                    )
-                logger.info(
-                    f"List of running apps: {', '.join(device.deviceV2.app_list_running())}"
-                )
+                    logger.critical(f"'{exception_line}' -> This kind of exception will stop the bot (no restart).")
+                logger.info(f"List of running apps: {', '.join(device.deviceV2.app_list_running())}")
                 save_crash(device)
                 close_instagram(device)
                 print_full_report(sessions, configs.args.scrape_to_file)
@@ -115,17 +111,11 @@ def restart(
     if print_traceback:
         logger.error(traceback.format_exc())
         save_crash(device)
-    logger.info(
-        f"List of running apps: {', '.join(device.deviceV2.app_list_running())}."
-    )
+    logger.info(f"List of running apps: {', '.join(device.deviceV2.app_list_running())}.")
     if configs.args.count_app_crashes or normal_crash:
         session_state.totalCrashes += 1
-        if session_state.check_limit(
-            limit_type=session_state.Limit.CRASHES, output=True
-        ):
-            logger.error(
-                "Reached crashes limit. Bot has crashed too much! Please check what's going on."
-            )
+        if session_state.check_limit(limit_type=session_state.Limit.CRASHES, output=True):
+            logger.error("Reached crashes limit. Bot has crashed too much! Please check what's going on.")
             stop_bot(device, sessions, session_state)
         logger.info("Something unexpected happened. Let's try again.")
     close_instagram(device)

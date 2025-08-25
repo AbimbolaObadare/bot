@@ -24,9 +24,7 @@ class InteractPlacePosts(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.description = (
-            "Handles the functionality of interacting with a places post owners"
-        )
+        self.description = "Handles the functionality of interacting with a places post owners"
         self.arguments = [
             {
                 "arg": "--place-posts-recent",
@@ -60,14 +58,7 @@ class InteractPlacePosts(Plugin):
         self.current_mode = plugin
 
         # Handle sources
-        sources = [
-            source
-            for source in (
-                self.args.place_posts_top
-                if self.current_mode == "place-posts-top"
-                else self.args.place_posts_recent
-            )
-        ]
+        sources = [source for source in (self.args.place_posts_top if self.current_mode == "place-posts-top" else self.args.place_posts_recent)]
 
         for source in sample_sources(sources, self.args.truncate_sources):
             (
@@ -121,9 +112,7 @@ class InteractPlacePosts(Plugin):
 
             if limit_reached:
                 logger.info("Ending session.")
-                self.session_state.check_limit(
-                    limit_type=self.session_state.Limit.ALL, output=True
-                )
+                self.session_state.check_limit(limit_type=self.session_state.Limit.ALL, output=True)
                 break
 
     def handle_place(
@@ -157,11 +146,7 @@ class InteractPlacePosts(Plugin):
             current_mode=self.current_mode,
         )
 
-        source_follow_limit = (
-            get_value(self.args.follow_limit, None, 15)
-            if self.args.follow_limit is not None
-            else None
-        )
+        source_follow_limit = get_value(self.args.follow_limit, None, 15) if self.args.follow_limit is not None else None
         is_follow_limit_reached = partial(
             is_follow_limit_reached_for_source,
             session_state=self.session_state,

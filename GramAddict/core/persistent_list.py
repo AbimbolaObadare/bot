@@ -33,9 +33,7 @@ class PersistentList(list):
                 try:
                     json_array = json.load(json_file)
                 except Exception as e:
-                    logger.error(
-                        f"Please check {json_file.name}, it contains this error: {e}"
-                    )
+                    logger.error(f"Please check {json_file.name}, it contains this error: {e}")
                     sys.exit(0)
             os.remove(path)
         else:

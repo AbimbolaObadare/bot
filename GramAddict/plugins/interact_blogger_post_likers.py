@@ -25,9 +25,7 @@ class InteractBloggerPostLikers(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.description = (
-            "Handles the functionality of interacting with a blogger post likers"
-        )
+        self.description = "Handles the functionality of interacting with a blogger post likers"
         self.arguments = [
             {
                 "arg": "--blogger-post-likers",
@@ -112,9 +110,7 @@ class InteractBloggerPostLikers(Plugin):
 
             if limit_reached:
                 logger.info("Likes and follows limit reached.")
-                self.session_state.check_limit(
-                    limit_type=self.session_state.Limit.ALL, output=True
-                )
+                self.session_state.check_limit(limit_type=self.session_state.Limit.ALL, output=True)
                 break
 
     def handle_blogger(
@@ -148,11 +144,7 @@ class InteractBloggerPostLikers(Plugin):
             scraping_file=self.args.scrape_to_file,
             current_mode=self.current_mode,
         )
-        source_follow_limit = (
-            get_value(self.args.follow_limit, None, 15)
-            if self.args.follow_limit is not None
-            else None
-        )
+        source_follow_limit = get_value(self.args.follow_limit, None, 15) if self.args.follow_limit is not None else None
         is_follow_limit_reached = partial(
             is_follow_limit_reached_for_source,
             session_state=self.session_state,

@@ -96,9 +96,7 @@ class InteractOwnFeed(Plugin):
 
         if limit_reached:
             logger.info("Ending session.")
-            self.session_state.check_limit(
-                limit_type=self.session_state.Limit.ALL, output=True
-            )
+            self.session_state.check_limit(limit_type=self.session_state.Limit.ALL, output=True)
             return
 
     def handle_feed(

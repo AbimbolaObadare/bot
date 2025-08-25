@@ -78,9 +78,7 @@ class RemoveFollowersFromList(Plugin):
             amount_of_users = get_value(current_file.split(" ")[1], None, 10)
         except IndexError:
             amount_of_users = 10
-            logger.warning(
-                f"You didn't passed how many users should be processed from the list! Default is {amount_of_users} users."
-            )
+            logger.warning(f"You didn't passed how many users should be processed from the list! Default is {amount_of_users} users.")
         if path.isfile(filename):
             with open(filename, "r", encoding="utf-8") as f:
                 nonempty_lines = [line.strip("\n") for line in f if line != "\n"]

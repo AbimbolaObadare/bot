@@ -65,9 +65,7 @@ def check_if_updated(crash=False):
     new_update, latest_version = update_available()
     if new_update:
         logger.warning("NEW VERSION FOUND!")
-        logger.warning(
-            f"Version {latest_version} has been released! Please update so that you can get all the latest features and bugfixes. Changelog here -> https://github.com/GramAddict/bot/blob/master/CHANGELOG.md"
-        )
+        logger.warning(f"Version {latest_version} has been released! Please update so that you can get all the latest features and bugfixes. Changelog here -> https://github.com/GramAddict/bot/blob/master/CHANGELOG.md")
         logger.warning("HOW TO UPDATE:")
         logger.warning("If you installed with pip: pip3 install GramAddict -U")
         logger.warning("If you installed with git: git pull")
@@ -124,14 +122,10 @@ def move_usernames_to_accounts():
                 rename(f"{dir}", dir.strip())
             shutil.move(dir.strip(), ACCOUNTS)
         except Exception as e:
-            logger.error(
-                f"Folder {dir.strip()} already exists! Won't overwrite it, please check which is the correct one and delete the other! Exception: {e}"
-            )
+            logger.error(f"Folder {dir.strip()} already exists! Won't overwrite it, please check which is the correct one and delete the other! Exception: {e}")
             sleep(3)
     if len(ls) > 0:
-        logger.warning(
-            f"Username folders {', '.join(ls)} have been moved to main folder 'accounts'. Remember that your config file must point there! Example: '--config accounts/yourusername/config.yml'"
-        )
+        logger.warning(f"Username folders {', '.join(ls)} have been moved to main folder 'accounts'. Remember that your config file must point there! Example: '--config accounts/yourusername/config.yml'")
 
 
 def config_examples():
@@ -174,9 +168,7 @@ def check_adb_connection():
 
 
 def get_instagram_version():
-    stream = os.popen(
-        f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell dumpsys package {app_id}"
-    )
+    stream = os.popen(f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell dumpsys package {app_id}")
     output = stream.read()
     version_match = re.findall("versionName=(\\S+)", output)
     version = version_match[0] if len(version_match) == 1 else "not found"
@@ -204,26 +196,18 @@ def head_up_notifications(enabled: bool = False):
     """
     Enable or disable head-up-notifications
     """
-    cmd: str = (
-        f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell settings put global heads_up_notifications_enabled {0 if not enabled else 1}"
-    )
+    cmd: str = f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell settings put global heads_up_notifications_enabled {0 if not enabled else 1}"
     return subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
 
 
 def check_screen_timeout():
     MIN_TIMEOUT = 5 * 6_000
-    cmd: str = (
-        f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell settings get system screen_off_timeout"
-    )
+    cmd: str = f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell settings get system screen_off_timeout"
     resp = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     try:
         if int(resp.stdout.lstrip()) < MIN_TIMEOUT:
-            logger.info(
-                f"Setting timeout of the screen to {MIN_TIMEOUT/6_000:.0f} minutes."
-            )
-            cmd: str = (
-                f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell settings put system screen_off_timeout {MIN_TIMEOUT}"
-            )
+            logger.info(f"Setting timeout of the screen to {MIN_TIMEOUT/6_000:.0f} minutes.")
+            cmd: str = f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell settings put system screen_off_timeout {MIN_TIMEOUT}"
 
             subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
         else:
@@ -255,9 +239,7 @@ def open_instagram(device):
     n = 0
     while device.deviceV2.app_current()["package"] != app_id:
         if n == max_tries:
-            logger.critical(
-                f"Unable to open Instagram. Bot will stop. Current package name: {device.deviceV2.app_current()['package']} (Looking for {app_id})"
-            )
+            logger.critical(f"Unable to open Instagram. Bot will stop. Current package name: {device.deviceV2.app_current()['package']} (Looking for {app_id})")
             return False
         n += 1
         logger.info(f"Waiting for Instagram to open... 😴 ({n}/{max_tries})")
@@ -276,24 +258,14 @@ def open_instagram(device):
         random_sleep()
     logger.debug("Setting FastInputIME as default keyboard.")
     device.deviceV2.set_input_ime(True)
-    cmd: str = (
-        f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell settings get secure default_input_method"
-    )
+    cmd: str = f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell settings get secure default_input_method"
     cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
     if cmd_res.stdout.replace(nl, "") != FastInputIME:
-        logger.warning(
-            f"FastInputIME is not the default keyboard! Default is: {cmd_res.stdout.replace(nl, '')}. Changing it via adb.."
-        )
-        cmd: str = (
-            f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell ime set {FastInputIME}"
-        )
-        cmd_res = subprocess.run(
-            cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8"
-        )
+        logger.warning(f"FastInputIME is not the default keyboard! Default is: {cmd_res.stdout.replace(nl, '')}. Changing it via adb..")
+        cmd: str = f"adb{'' if configs.device_id is None else ' -s ' + configs.device_id} shell ime set {FastInputIME}"
+        cmd_res = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
         if cmd_res.stdout.startswith("Error:"):
-            logger.warning(
-                f"{cmd_res.stdout.replace(nl, '')}. It looks like you don't have FastInputIME installed :S"
-            )
+            logger.warning(f"{cmd_res.stdout.replace(nl, '')}. It looks like you don't have FastInputIME installed :S")
         else:
             logger.info("FastInputIME is the default keyboard.")
     else:
@@ -302,9 +274,7 @@ def open_instagram(device):
         try:
             device.start_screenrecord()
         except Exception as e:
-            logger.error(
-                f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}"
-            )
+            logger.error(f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}")
     return True
 
 
@@ -316,9 +286,7 @@ def close_instagram(device):
         try:
             device.stop_screenrecord(crash=False)
         except Exception as e:
-            logger.error(
-                f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}"
-            )
+            logger.error(f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}")
 
 
 def check_if_crash_popup_is_there(device) -> bool:
@@ -411,40 +379,28 @@ def pre_post_script(path: str, pre: bool = True):
             except Exception as ex:
                 logger.error(f"This exception has occurred: {ex}")
         else:
-            logger.error(
-                f"File '{path}' not found. Check your spelling. (The start point for relative paths is this: '{os.getcwd()}')."
-            )
+            logger.error(f"File '{path}' not found. Check your spelling. (The start point for relative paths is this: '{os.getcwd()}').")
 
 
-def print_telegram_reports(
-    conf, telegram_reports_at_end, followers_now, following_now, time_left=None
-):
+def print_telegram_reports(conf, telegram_reports_at_end, followers_now, following_now, time_left=None):
     if followers_now is not None and telegram_reports_at_end:
-        conf.actions["telegram-reports"].run(
-            conf, "telegram-reports", followers_now, following_now, time_left
-        )
+        conf.actions["telegram-reports"].run(conf, "telegram-reports", followers_now, following_now, time_left)
 
 
 def kill_atx_agent(device):
     _restore_keyboard(device)
     logger.info("Kill atx agent.")
-    cmd: str = (
-        f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell pkill atx-agent"
-    )
+    cmd: str = f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell pkill atx-agent"
     subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8")
 
 
 def restart_atx_agent(device):
     kill_atx_agent(device)
     logger.info("Restarting atx agent.")
-    cmd: str = (
-        f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell /data/local/tmp/atx-agent server -d"
-    )
+    cmd: str = f"adb{'' if configs.device_id is None else f' -s {configs.device_id}'} shell /data/local/tmp/atx-agent server -d"
 
     try:
-        result = subprocess.run(
-            cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8", check=True
-        )
+        result = subprocess.run(cmd, stdout=PIPE, stderr=PIPE, shell=True, encoding="utf8", check=True)
         if result.returncode != 0:
             logger.error(f"Failed to restart atx-agent: {result.stderr}")
         else:
@@ -492,9 +448,7 @@ def save_crash(device):
         try:
             device.stop_screenrecord(crash=True)
         except Exception as e:
-            logger.error(
-                f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}"
-            )
+            logger.error(f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}")
         files = [f for f in os.listdir("./") if f.endswith(".mp4")]
         try:
             os.replace(files[-1], os.path.join(crash_path, "video.mp4"))
@@ -520,20 +474,14 @@ def save_crash(device):
         try:
             device.start_screenrecord()
         except Exception as e:
-            logger.error(
-                f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}"
-            )
+            logger.error(f"You can't use this feature without installing dependencies. Type that in console: 'pip3 install -U \"uiautomator2[image]\" -i https://pypi.doubanio.com/simple'. Exception: {e}")
 
 
 def trim_txt(source: str, target: str) -> None:
     with open(source, "r", encoding="utf-8") as f:
         lines = f.readlines()
     tail = next(
-        (
-            index
-            for index, line in enumerate(lines[::-1])
-            if line.find("Arguments used:") != -1
-        ),
+        (index for index, line in enumerate(lines[::-1]) if line.find("Arguments used:") != -1),
         250,
     )
     rem = lines[-tail:]
@@ -581,10 +529,7 @@ def get_value(
     its_time: bool = False,
 ) -> Optional[Union[int, float]]:
     def print_error() -> None:
-        logger.error(
-            f'Using default value instead of "{count}", because it must be '
-            "either a number (e.g. 2) or a range (e.g. 2-4)."
-        )
+        logger.error(f'Using default value instead of "{count}", because it must be ' "either a number (e.g. 2) or a range (e.g. 2-4).")
 
     if count is None:
         return None
@@ -632,9 +577,7 @@ def sample_sources(sources, n_sources):
 
     sources_limit_input = n_sources.split("-")
     if len(sources_limit_input) > 1:
-        sources_limit = randint(
-            int(sources_limit_input[0]), int(sources_limit_input[1])
-        )
+        sources_limit = randint(int(sources_limit_input[0]), int(sources_limit_input[1]))
     else:
         sources_limit = int(sources_limit_input[0])
     if len(sources) < sources_limit:
@@ -644,12 +587,8 @@ def sample_sources(sources, n_sources):
         shuffle(truncaded)
     else:
         truncaded = sample(sources, sources_limit)
-        logger.info(
-            f"Source list truncated at {len(truncaded)} {'item' if len(truncaded)<=1 else 'items'}."
-        )
-    logger.info(
-        f"In this session, {'that source' if len(truncaded)<=1 else 'these sources'} will be handled: {', '.join(emoji.emojize(str(x), use_aliases=True) for x in truncaded)}"
-    )
+        logger.info(f"Source list truncated at {len(truncaded)} {'item' if len(truncaded)<=1 else 'items'}.")
+    logger.info(f"In this session, {'that source' if len(truncaded)<=1 else 'these sources'} will be handled: {', '.join(emoji.emojize(str(x), use_aliases=True) for x in truncaded)}")
     return truncaded
 
 
@@ -672,31 +611,21 @@ def init_on_things(source, args, sessions, session_state):
         _on_interaction,
         likes_limit=args.current_likes_limit,
         source=source,
-        interactions_limit=get_value(
-            args.interactions_count, "Interactions count: {}", 70
-        ),
+        interactions_limit=get_value(args.interactions_count, "Interactions count: {}", 70),
         sessions=sessions,
         session_state=session_state,
         args=args,
     )
 
     if args.stories_count != "0":
-        stories_percentage = get_value(
-            args.stories_percentage, "Chance of watching stories: {}%", 40
-        )
+        stories_percentage = get_value(args.stories_percentage, "Chance of watching stories: {}%", 40)
     else:
         stories_percentage = 0
 
     likes_percentage = get_value(args.likes_percentage, "Chance of liking: {}%", 100)
-    follow_percentage = get_value(
-        args.follow_percentage, "Chance of following: {}%", 40
-    )
-    comment_percentage = get_value(
-        args.comment_percentage, "Chance of commenting: {}%", 0
-    )
-    interact_percentage = get_value(
-        args.interact_percentage, "Chance of interacting: {}%", 40
-    )
+    follow_percentage = get_value(args.follow_percentage, "Chance of following: {}%", 40)
+    comment_percentage = get_value(args.comment_percentage, "Chance of commenting: {}%", 0)
+    interact_percentage = get_value(args.interact_percentage, "Chance of interacting: {}%", 40)
     pm_percentage = get_value(args.pm_percentage, "Chance of send PM: {}%", 0)
 
     return (
@@ -711,14 +640,10 @@ def init_on_things(source, args, sessions, session_state):
 
 
 def set_time_delta(args):
-    args.time_delta_session = (
-        get_value(args.time_delta, None, 0) * (1 if random.random() < 0.5 else -1) * 60
-    ) + random.randint(0, 59)
+    args.time_delta_session = (get_value(args.time_delta, None, 0) * (1 if random.random() < 0.5 else -1) * 60) + random.randint(0, 59)
     m, s = divmod(abs(args.time_delta_session), 60)
     h, m = divmod(m, 60)
-    logger.info(
-        f"Time delta has set to {'' if args.time_delta_session >0 else '-'}{h:02d}:{m:02d}:{s:02d}."
-    )
+    logger.info(f"Time delta has set to {'' if args.time_delta_session >0 else '-'}{h:02d}:{m:02d}:{s:02d}.")
 
 
 def wait_for_next_session(time_left, session_state, sessions, device):
@@ -771,9 +696,7 @@ class Square:
 
     def point(self):
         """return safe point to click"""
-        if (self.x1 - self.x0) <= (2 * self.delta) or (self.y1 - self.y0) <= (
-            2 * self.delta
-        ):
+        if (self.x1 - self.x0) <= (2 * self.delta) or (self.y1 - self.y0) <= (2 * self.delta):
             return nan
         else:
             return [

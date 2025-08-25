@@ -33,9 +33,7 @@ class PluginLoader(object):
     def walk_package(self, package):
         imported_package = __import__(package, fromlist=["plugins"])
 
-        for _, pluginname, ispkg in pkgutil.iter_modules(
-            imported_package.__path__, f"{imported_package.__name__}."
-        ):
+        for _, pluginname, ispkg in pkgutil.iter_modules(imported_package.__path__, f"{imported_package.__name__}."):
             if not ispkg:
                 plugin_module = __import__(pluginname, fromlist=["plugins"])
                 clsmembers = inspect.getmembers(plugin_module, inspect.isclass)

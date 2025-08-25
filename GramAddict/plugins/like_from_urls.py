@@ -19,9 +19,7 @@ class LikeFromURLs(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.description = (
-            "Likes a post from url. The urls are read from a plaintext file"
-        )
+        self.description = "Likes a post from url. The urls are read from a plaintext file"
         self.arguments = [
             {
                 "arg": "--posts-from-file",
@@ -78,11 +76,7 @@ class LikeFromURLs(Plugin):
                 f.seek(0)
                 for line in f:
                     url = line.strip()
-                    if (
-                        validate_url(url)
-                        and "instagram.com/p/" in url
-                        and open_instagram_with_url(url)
-                    ):
+                    if validate_url(url) and "instagram.com/p/" in url and open_instagram_with_url(url):
                         already_liked, _ = opened_post_view._is_post_liked()
                         if already_liked:
                             logger.info("Post already liked!")
@@ -114,15 +108,11 @@ class LikeFromURLs(Plugin):
                                 opened_post_view.watch_media(media_type)
                                 like_succeed = opened_post_view.like_post()
 
-                            username, _, _ = post_view_list._post_owner(
-                                self.current_mode, Owner.GET_NAME
-                            )
+                            username, _, _ = post_view_list._post_owner(self.current_mode, Owner.GET_NAME)
                             if like_succeed:
                                 register_like(self.device, self.session_state)
                                 logger.info(f"Like for: {url}, status: {like_succeed}")
-                                storage.add_interacted_user(
-                                    username, self.session_state.id, liked=1
-                                )
+                                storage.add_interacted_user(username, self.session_state.id, liked=1)
                             else:
                                 logger.info("Not able to like this post!")
                     logger.info("Going back..")

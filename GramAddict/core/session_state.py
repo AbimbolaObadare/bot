@@ -80,57 +80,31 @@ class SessionState:
         self,
     ):
         """set the limits for current session"""
-        self.args.current_likes_limit = get_value(
-            self.args.total_likes_limit, None, 300
-        )
-        self.args.current_follow_limit = get_value(
-            self.args.total_follows_limit, None, 50
-        )
-        self.args.current_unfollow_limit = get_value(
-            self.args.total_unfollows_limit, None, 50
-        )
-        self.args.current_comments_limit = get_value(
-            self.args.total_comments_limit, None, 10
-        )
+        self.args.current_likes_limit = get_value(self.args.total_likes_limit, None, 300)
+        self.args.current_follow_limit = get_value(self.args.total_follows_limit, None, 50)
+        self.args.current_unfollow_limit = get_value(self.args.total_unfollows_limit, None, 50)
+        self.args.current_comments_limit = get_value(self.args.total_comments_limit, None, 10)
         self.args.current_pm_limit = get_value(self.args.total_pm_limit, None, 10)
-        self.args.current_watch_limit = get_value(
-            self.args.total_watches_limit, None, 50
-        )
-        self.args.current_success_limit = get_value(
-            self.args.total_successful_interactions_limit, None, 100
-        )
-        self.args.current_total_limit = get_value(
-            self.args.total_interactions_limit, None, 1000
-        )
-        self.args.current_scraped_limit = get_value(
-            self.args.total_scraped_limit, None, 200
-        )
-        self.args.current_crashes_limit = get_value(
-            self.args.total_crashes_limit, None, 5
-        )
+        self.args.current_watch_limit = get_value(self.args.total_watches_limit, None, 50)
+        self.args.current_success_limit = get_value(self.args.total_successful_interactions_limit, None, 100)
+        self.args.current_total_limit = get_value(self.args.total_interactions_limit, None, 1000)
+        self.args.current_scraped_limit = get_value(self.args.total_scraped_limit, None, 200)
+        self.args.current_crashes_limit = get_value(self.args.total_crashes_limit, None, 5)
 
     def check_limit(self, limit_type=None, output=False):
         """Returns True if limit reached - else False"""
         limit_type = SessionState.Limit.ALL if limit_type is None else limit_type
         # check limits
         total_likes = self.totalLikes >= int(self.args.current_likes_limit)
-        total_followed = sum(self.totalFollowed.values()) >= int(
-            self.args.current_follow_limit
-        )
+        total_followed = sum(self.totalFollowed.values()) >= int(self.args.current_follow_limit)
         total_unfollowed = self.totalUnfollowed >= int(self.args.current_unfollow_limit)
         total_comments = self.totalComments >= int(self.args.current_comments_limit)
         total_pm = self.totalPm >= int(self.args.current_pm_limit)
         total_watched = self.totalWatched >= int(self.args.current_watch_limit)
-        total_successful = sum(self.successfulInteractions.values()) >= int(
-            self.args.current_success_limit
-        )
-        total_interactions = sum(self.totalInteractions.values()) >= int(
-            self.args.current_total_limit
-        )
+        total_successful = sum(self.successfulInteractions.values()) >= int(self.args.current_success_limit)
+        total_interactions = sum(self.totalInteractions.values()) >= int(self.args.current_total_limit)
 
-        total_scraped = sum(self.totalScraped.values()) >= int(
-            self.args.current_scraped_limit
-        )
+        total_scraped = sum(self.totalScraped.values()) >= int(self.args.current_scraped_limit)
 
         total_crashes = self.totalCrashes >= int(self.args.current_crashes_limit)
 
@@ -260,9 +234,7 @@ class SessionState:
             inf = datetime.strptime(inf_value, "%H.%M %Y-%m-%d") + delta
             sup_value = f"{n.split('-')[1]} {today}"
             sup = datetime.strptime(sup_value, "%H.%M %Y-%m-%d") + delta
-            if sup - inf + timedelta(minutes=1) == timedelta(
-                days=1
-            ) or sup - inf + timedelta(minutes=1) == timedelta(days=0):
+            if sup - inf + timedelta(minutes=1) == timedelta(days=1) or sup - inf + timedelta(minutes=1) == timedelta(days=0):
                 logger.debug("Whole day mode.")
                 return True, 0
             if time_in_range(inf.time(), sup.time(), current_time.time()):
@@ -302,9 +274,7 @@ class SessionStateEncoder(JSONEncoder):
         return {
             "id": session_state.id,
             "total_interactions": sum(session_state.totalInteractions.values()),
-            "successful_interactions": sum(
-                session_state.successfulInteractions.values()
-            ),
+            "successful_interactions": sum(session_state.successfulInteractions.values()),
             "total_followed": sum(session_state.totalFollowed.values()),
             "total_likes": session_state.totalLikes,
             "total_comments": session_state.totalComments,

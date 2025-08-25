@@ -12,9 +12,7 @@ class ScrollEndDetector:
     skipped_all_fling = 0
     pages = []
 
-    def __init__(
-        self, repeats_to_end=5, skipped_list_limit=999, skipped_fling_limit=999
-    ):
+    def __init__(self, repeats_to_end=5, skipped_list_limit=999, skipped_fling_limit=999):
         self.repeats_to_end = repeats_to_end
         self.skipped_list_limit = skipped_list_limit
         self.skipped_fling_limit = skipped_fling_limit
@@ -42,10 +40,7 @@ class ScrollEndDetector:
             return True
 
     def is_fling_limit_reached(self):
-        if (
-            self.skipped_all_fling >= self.skipped_fling_limit
-            and self.skipped_fling_limit > 0
-        ):
+        if self.skipped_all_fling >= self.skipped_fling_limit and self.skipped_fling_limit > 0:
             self.skipped_all_fling = 0
             return True
 

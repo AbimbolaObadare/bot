@@ -59,17 +59,11 @@ def _initialize_aggregated_data():
 
 def _calculate_session_duration(session):
     try:
-        start_datetime = datetime.strptime(
-            session["start_time"], "%Y-%m-%d %H:%M:%S.%f"
-        )
-        finish_datetime = datetime.strptime(
-            session["finish_time"], "%Y-%m-%d %H:%M:%S.%f"
-        )
+        start_datetime = datetime.strptime(session["start_time"], "%Y-%m-%d %H:%M:%S.%f")
+        finish_datetime = datetime.strptime(session["finish_time"], "%Y-%m-%d %H:%M:%S.%f")
         return int((finish_datetime - start_datetime).total_seconds() / 60)
     except ValueError:
-        logger.debug(
-            f"{session['id']} has no finish_time. Skipping duration calculation."
-        )
+        logger.debug(f"{session['id']} has no finish_time. Skipping duration calculation.")
         return 0
 
 
@@ -205,9 +199,7 @@ class TelegramReports(Plugin):
 
         sessions = load_sessions(username)
         if not sessions:
-            logger.error(
-                f"No session data found for {username}. Skipping report generation."
-            )
+            logger.error(f"No session data found for {username}. Skipping report generation.")
             return
 
         last_session = sessions[-1]
@@ -215,9 +207,7 @@ class TelegramReports(Plugin):
 
         telegram_config = load_telegram_config(username)
         if not telegram_config:
-            logger.error(
-                f"No telegram configuration found for {username}. Skipping report generation."
-            )
+            logger.error(f"No telegram configuration found for {username}. Skipping report generation.")
             return
 
         daily_aggregated_data = daily_summary(sessions)

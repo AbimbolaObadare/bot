@@ -109,8 +109,7 @@ def test_calculate_duration_not_finished(mock_session_data_json):
 
 
 @pytest.mark.parametrize(
-    "input_date,expected_total_likes, expected_total_watched, expected_total_followed, expected_total_unfollowed, "
-    "expected_total_comments, expected_total_pm, expected_total_followers_gained",
+    "input_date,expected_total_likes, expected_total_watched, expected_total_followed, expected_total_unfollowed, " "expected_total_comments, expected_total_pm, expected_total_followers_gained",
     [
         ("2024-01-02", 20, 20, 20, 20, 20, 20, 20),
         ("2024-01-01", 16, 16, 16, 16, 16, 16, 22),
@@ -134,15 +133,10 @@ def test_daily_summary(
     assert results.get(input_date, {}).get("total_likes") == expected_total_likes
     assert results.get(input_date, {}).get("total_watched") == expected_total_watched
     assert results.get(input_date, {}).get("total_followed") == expected_total_followed
-    assert (
-        results.get(input_date, {}).get("total_unfollowed") == expected_total_unfollowed
-    )
+    assert results.get(input_date, {}).get("total_unfollowed") == expected_total_unfollowed
     assert results.get(input_date, {}).get("total_comments") == expected_total_comments
     assert results.get(input_date, {}).get("total_pm") == expected_total_pm
-    assert (
-        results.get(input_date, {}).get("followers_gained")
-        == expected_total_followers_gained
-    )
+    assert results.get(input_date, {}).get("followers_gained") == expected_total_followers_gained
 
 
 def test_daily_summary_no_sessions():
@@ -167,16 +161,12 @@ def test_weekly_average(mock_daily_summary):
     assert results.get("followers_gained") == 50, "Expected 50"
 
 
-def test_generate_report(
-    mock_session_data_json, mock_daily_summary, mock_weekly_average
-):
+def test_generate_report(mock_session_data_json, mock_daily_summary, mock_weekly_average):
     """Test if the function returns a string"""
     daily_aggregated_data = mock_daily_summary
     today_data = daily_aggregated_data.get("2024-01-02", {})
     last_session = mock_session_data_json[-1]
     last_session["duration"] = 120
 
-    report = TelegramReports.generate_report(
-        "test_user", last_session, today_data, mock_weekly_average, 400, 400
-    )
+    report = TelegramReports.generate_report("test_user", last_session, today_data, mock_weekly_average, 400, 400)
     assert isinstance(report, str), "Expected a string"

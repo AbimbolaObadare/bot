@@ -11,9 +11,7 @@ class DataAnalytics(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.description = (
-            "Generates a PDF analytics report of current username session data"
-        )
+        self.description = "Generates a PDF analytics report of current username session data"
         self.arguments = [
             {
                 "arg": "--analytics",
@@ -34,7 +32,5 @@ class DataAnalytics(Plugin):
         )
         modulename = "matplotlib"
         if modulename not in sys.modules:
-            logger.error(
-                f"You can't use {plugin} without installing {modulename}. Type that in console: 'pip3 install gramaddict[analytics]'"
-            )
+            logger.error(f"You can't use {plugin} without installing {modulename}. Type that in console: 'pip3 install gramaddict[analytics]'")
             return

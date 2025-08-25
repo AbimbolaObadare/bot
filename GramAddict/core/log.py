@@ -82,11 +82,7 @@ def configure_logger(debug, username):
     # Console logger (limited but colored log)
     console_handler = logging.StreamHandler()
     console_handler.setLevel(console_level)
-    console_handler.setFormatter(
-        ColoredFormatter(
-            fmt="%(asctime)s %(levelname)8s | %(message)s", datefmt="[%m/%d %H:%M:%S]"
-        )
-    )
+    console_handler.setFormatter(ColoredFormatter(fmt="%(asctime)s %(levelname)8s | %(message)s", datefmt="[%m/%d %H:%M:%S]"))
     console_handler.addFilter(LoggerFilterGramAddictOnly())
     root_logger.addHandler(console_handler)
 
@@ -124,9 +120,7 @@ def update_log_file_name(username: str):
         named_file_handler.doRollover()
 
     # copy existing runtime logs (uidd4.log) to named log file (username.log)
-    with open(old_full_filename, "r", encoding="utf-8") as unnamed_file, open(
-        named_full_filename, "a", encoding="utf-8"
-    ) as named_file:
+    with open(old_full_filename, "r", encoding="utf-8") as unnamed_file, open(named_full_filename, "a", encoding="utf-8") as named_file:
         for line in unnamed_file:
             named_file.write(line)
 
@@ -140,9 +134,7 @@ def update_log_file_name(username: str):
     try:
         os.remove(old_full_filename)
     except Exception as e:
-        current_logger.debug(
-            f"Failed to remove old file: {old_full_filename}. Exception: {e}"
-        )
+        current_logger.debug(f"Failed to remove old file: {old_full_filename}. Exception: {e}")
 
     global g_log_file_name
     global g_file_handler

@@ -26,9 +26,7 @@ class InteractHashtagLikers(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.description = (
-            "Handles the functionality of interacting with a hashtags likers"
-        )
+        self.description = "Handles the functionality of interacting with a hashtags likers"
         self.arguments = [
             {
                 "arg": "--hashtag-likers-top",
@@ -62,14 +60,7 @@ class InteractHashtagLikers(Plugin):
         self.current_mode = plugin
 
         # IMPORTANT: in each job we assume being on the top of the Profile tab already
-        sources = [
-            source
-            for source in (
-                self.args.hashtag_likers_top
-                if self.current_mode == "hashtag-likers-top"
-                else self.args.hashtag_likers_recent
-            )
-        ]
+        sources = [source for source in (self.args.hashtag_likers_top if self.current_mode == "hashtag-likers-top" else self.args.hashtag_likers_recent)]
         # Start
         for source in sample_sources(sources, self.args.truncate_sources):
             (
@@ -127,9 +118,7 @@ class InteractHashtagLikers(Plugin):
 
             if limit_reached:
                 logger.info("Ending session.")
-                self.session_state.check_limit(
-                    limit_type=self.session_state.Limit.ALL, output=True
-                )
+                self.session_state.check_limit(limit_type=self.session_state.Limit.ALL, output=True)
                 break
 
     def handle_hashtag(
@@ -163,11 +152,7 @@ class InteractHashtagLikers(Plugin):
             current_mode=self.current_mode,
         )
 
-        source_follow_limit = (
-            get_value(self.args.follow_limit, None, 15)
-            if self.args.follow_limit is not None
-            else None
-        )
+        source_follow_limit = get_value(self.args.follow_limit, None, 15) if self.args.follow_limit is not None else None
         is_follow_limit_reached = partial(
             is_follow_limit_reached_for_source,
             session_state=self.session_state,

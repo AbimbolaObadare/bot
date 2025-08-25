@@ -48,9 +48,7 @@ class Config:
             try:
                 file_name = self.args[self.args.index("--config") + 1]
                 if not file_name.endswith((".yml", ".yaml")):
-                    logger.error(
-                        f"You have to specify a *.yml / *.yaml config file path (For example 'accounts/your_account_name/config.yml')! \nYou entered: {file_name}, abort."
-                    )
+                    logger.error(f"You have to specify a *.yml / *.yaml config file path (For example 'accounts/your_account_name/config.yml')! \nYou entered: {file_name}, abort.")
                     sys.exit(1)
                 logger.warning(get_time_last_save(file_name))
                 with open(file_name, encoding="utf-8") as fin:
@@ -60,14 +58,10 @@ class Config:
                     # preload config for debug and username
                     self.config = yaml.safe_load(fin)
             except IndexError:
-                logger.warning(
-                    "Please provide a filename with your --config argument. Example: '--config accounts/yourusername/config.yml'"
-                )
+                logger.warning("Please provide a filename with your --config argument. Example: '--config accounts/yourusername/config.yml'")
                 exit(2)
             except FileNotFoundError:
-                logger.error(
-                    f"I can't see the file '{file_name}'! Double check the spelling or if you're calling the bot from the right folder. (You're there: '{os.getcwd()}')"
-                )
+                logger.error(f"I can't see the file '{file_name}'! Double check the spelling or if you're calling the bot from the right folder. (You're there: '{os.getcwd()}')")
                 exit(2)
 
             self.username = self.config.get("username", False)
@@ -80,9 +74,7 @@ class Config:
                 try:
                     self.username = self.args[self.args.index("--username") + 1]
                 except IndexError:
-                    logger.warning(
-                        "Please provide a username with your --username argument. Example: '--username yourusername'"
-                    )
+                    logger.warning("Please provide a username with your --username argument. Example: '--username yourusername'")
                     exit(2)
             if "--app-id" in self.args:
                 self.app_id = self.args[self.args.index("--app-id") + 1]
@@ -91,9 +83,7 @@ class Config:
 
         # Configure ArgParse
         self.parser = configargparse.ArgumentParser(
-            config_file_open_func=lambda filename: open(
-                filename, "r+", encoding="utf-8"
-            ),
+            config_file_open_func=lambda filename: open(filename, "r+", encoding="utf-8"),
             description="GramAddict Instagram Bot",
         )
         self.parser.add_argument(
@@ -133,17 +123,13 @@ class Config:
                         if arg.get("operation", False):
                             self.actions[arg["arg"][2:]] = plugin
                     except Exception as e:
-                        logger.error(
-                            f"Error while importing arguments of plugin {plugin.__class__.__name__}. Error: Missing key from arguments dictionary - {e}"
-                        )
+                        logger.error(f"Error while importing arguments of plugin {plugin.__class__.__name__}. Error: Missing key from arguments dictionary - {e}")
 
     def parse_args(self):
         def _is_legacy_arg(arg):
             if arg in ["interact", "hashtag-likers"]:
                 if self.first_run:
-                    logger.warning(
-                        f"You are using a legacy argument {arg} that is no longer supported. It will not be used. Please refer to https://docs.gramaddict.org/#/configuration?id=arguments."
-                    )
+                    logger.warning(f"You are using a legacy argument {arg} that is no longer supported. It will not be used. Please refer to https://docs.gramaddict.org/#/configuration?id=arguments.")
                 return True
             return False
 
@@ -175,15 +161,11 @@ class Config:
         if "run" in self.unknown_args:
             self.unknown_args.remove("run")
         if self.unknown_args and self.first_run:
-            logger.error(
-                "Unknown arguments: " + ", ".join(str(arg) for arg in self.unknown_args)
-            )
+            logger.error("Unknown arguments: " + ", ".join(str(arg) for arg in self.unknown_args))
             self.parser.print_help()
             for arg in self.unknown_args:
                 if "detect-block" in arg:
-                    logger.error(
-                        "Please replace the line 'detect-block: true/false' in your config file *.yml with 'disable-block-detection: true/false'"
-                    )
+                    logger.error("Please replace the line 'detect-block: true/false' in your config file *.yml with 'disable-block-detection: true/false'")
                     break
             exit(0)
         self.device_id = self.args.device
@@ -192,20 +174,12 @@ class Config:
         if self.config_list:
             for item in self.config_list:
                 item = item.split(":")[0]
-                if (
-                    item in self.actions
-                    and getattr(self.args, item.replace("-", "_")) is not None
-                    and not _is_legacy_arg(item)
-                ):
+                if item in self.actions and getattr(self.args, item.replace("-", "_")) is not None and not _is_legacy_arg(item):
                     self.enabled.append(item)
         else:
             for item in sys.argv:
                 nitem = item[2:]
-                if (
-                    nitem in self.actions
-                    and getattr(self.args, nitem.replace("-", "_")) is not None
-                    and not _is_legacy_arg(nitem)
-                ):
+                if nitem in self.actions and getattr(self.args, nitem.replace("-", "_")) is not None and not _is_legacy_arg(nitem):
                     self.enabled.append(nitem)
 
 
